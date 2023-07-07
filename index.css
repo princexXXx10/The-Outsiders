@@ -16,64 +16,106 @@ body {
 /* Header Section */
 header {
   background-color: whitesmoke;
-  padding: 1rem 2rem;
-  color: black;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 999;
 }
 
-nav {
-  width: 80%;
-  margin: auto;
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.logo {
-  font-size: 1.5rem;
-}
-.logo a {
-  text-decoration: none;
-  color: black;
+  padding: 1rem 1.5rem;
 }
 
 .hamburger {
   display: none;
-  flex-direction: column;
-  cursor: pointer;
 }
 
-.line {
+.bar {
+  display: block;
   width: 25px;
   height: 3px;
-  background-color: #fff;
-  margin: 3px;
-  transition: all 0.3s ease;
+  margin: 5px auto;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  background-color: #101010;
 }
 
-.nav-links {
+.nav-menu {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.nav-links li {
-  display: inline-block;
-  margin-left: 1rem;
+.nav-item {
+  margin-left: 3rem;
 }
 
-.nav-links li a {
-  color: black;
-  text-decoration: none;
+.nav-link{
+  font-size: 1rem;
+  font-weight: 400;
+  color: #475569;
 }
 
-/* Main Content Section */
+.nav-link:hover{
+  color: #3498db;
+}
 
-main {
-  margin-top: 4rem;
+.nav-logo {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #3498db;
+}
+
+@media only screen and (max-width: 768px) {
+  .nav-menu {
+      position: fixed;
+      left: -100%;
+      top: 4rem;
+      flex-direction: column;
+      justify-content: center;
+      background-color: whitesmoke;
+      width: 80%;
+      height: 65vh;
+      text-align: center;
+      transition: 0.3s;
+      box-shadow:
+          0 10px 27px rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-menu.active {
+      left: 0;
+  }
+
+  .nav-item {
+      margin: 2rem 0;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .hamburger.active .bar:nth-child(2) {
+      opacity: 0;
+  }
+
+  .hamburger.active .bar:nth-child(1) {
+      -webkit-transform: translateY(8px) rotate(45deg);
+      transform: translateY(8px) rotate(45deg);
+  }
+
+  .hamburger.active .bar:nth-child(3) {
+      -webkit-transform: translateY(-8px) rotate(-45deg);
+      transform: translateY(-8px) rotate(-45deg);
+  }
 }
 
 /* Hero Section */
@@ -242,7 +284,7 @@ main {
 .btn {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background-color: #303030;
+  background-color: #3498db;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
