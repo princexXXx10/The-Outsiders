@@ -5,8 +5,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+
+
 if (isset($_SESSION['usr_id'])) {
-    header("Location: index.php");
+    header("Location: account.php");
 }
 
 include_once 'dbconnect.php';
@@ -16,30 +18,49 @@ $error = false;
 
 //check if form is submitted
 if (isset($_POST['signup'])) {
-    $name = mysqli_real_escape_string($con, $_POST['name']);
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
-    $cpassword = mysqli_real_escape_string($con, $_POST['cpassword']);
-
+    $userData = array(
+        'username' => $_POST['name'],
+        'email' => $_POST['email'],
+        'password' => password_hash($_POST['password'], PASSWORD_DEFAULT) // Hashing the password for security
+    );
     //name can contain only alpha characters and space
-    if (!preg_match("/^[a-zA-Z ]+$/", $name)) {
+    if (!preg_match("/^[a-zA-Z ]+$/", $userData['username'])) {
         $error = true;
         $name_error = "Name must contain only alphabets and space";
     }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
         $error = true;
         $email_error = "Please Enter Valid Email ID";
     }
-    if (strlen($password) < 6) {
+    if (strlen($_POST['password']) < 6) {
         $error = true;
         $password_error = "Password must be minimum of 6 characters";
     }
-    if ($password != $cpassword) {
+    if ($_POST['password'] != $_POST['cpassword']) {
         $error = true;
         $cpassword_error = "Password and Confirm Password doesn't match";
     }
     if (!$error) {
-        if (mysqli_query($con, "INSERT INTO users(name,email,password) VALUES('" . $name . "', '" . $email . "', '" . md5($password) . "')")) {
+        $sql_create_table = "
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        email TEXT NOT NULL,
+        password TEXT NOT NULL
+    )
+";
+        // Execute the CREATE TABLE query
+        if ($pdo->exec($sql_create_table) !== false) {
+            echo "Table 'users' created (if it didn't exist).";
+        } else {
+            echo "Error creating table: " . $pdo->errorInfo()[2];
+        }
+
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+        $stmt->bindParam(':username', $userData['username']);
+        $stmt->bindParam(':email', $userData['email']);
+        $stmt->bindParam(':password', $userData['password']);
+        if ($stmt->execute()) {
             $successmsg = "Successfully Registered! <a href='login.php'>Click here to Login</a>";
         } else {
             $errormsg = "Error in registering...Please try again later!";
@@ -55,7 +76,7 @@ if (isset($_POST['signup'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Outsider - Account</title>
-    <link rel="stylesheet" href="stylesheet/register.css" />
+    <link rel="stylesheet" href="../stylesheet/register.css" />
 </head>
 
 <body>
@@ -68,11 +89,11 @@ if (isset($_POST['signup'])) {
                 <div class="line"></div>
             </div>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="events.html">Events</a></li>
-                <li><a href="account.html">Account</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../events.html">Events</a></li>
+                <li><a href="account.php">Account</a></li>
+                <li><a href="../contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -89,7 +110,7 @@ if (isset($_POST['signup'])) {
                                 <div class="form-group">
                                     <label for="name">Name</label>
                                     <input type="text" name="name" placeholder="Enter Full Name" required value="<?php if ($error)
-                                        echo $name; ?>" class="form-control" />
+                                        echo $error; ?>" class="form-control" />
                                     <span class="text-danger">
                                         <?php if (isset($name_error))
                                             echo $name_error; ?>
@@ -99,7 +120,7 @@ if (isset($_POST['signup'])) {
                                 <div class="form-group">
                                     <label for="name">Email</label>
                                     <input type="text" name="email" placeholder="Email" required value="<?php if ($error)
-                                        echo $email; ?>" class="form-control" />
+                                        echo $error; ?>" class="form-control" />
                                     <span class="text-danger">
                                         <?php if (isset($email_error))
                                             echo $email_error; ?>
@@ -158,7 +179,7 @@ if (isset($_POST['signup'])) {
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
 </body>
 
 </html>

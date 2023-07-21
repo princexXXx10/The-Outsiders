@@ -2,25 +2,32 @@
 session_start();
 
 if (isset($_SESSION['usr_id']) != "") {
-    header("Location: index.php");
+    header("Location: account.php");
 }
 
 include_once 'dbconnect.php';
 
 //check if form is submitted
 if (isset($_POST['login'])) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
 
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
-    $result = mysqli_query($con, "SELECT * FROM users WHERE email = '" . $email . "' and password = '" . md5($password) . "'");
+    // Fetch the user record from the database by username
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row = mysqli_fetch_array($result)) {
-        $_SESSION['usr_id'] = $row['id'];
-        $_SESSION['usr_name'] = $row['name'];
-        header("Location: index.php");
+    if ($user && password_verify($password, $user['password'])) {
+        // Password is correct, user is authenticated
+        $_SESSION['username'] = $email;
+        $_SESSION['usr_id'] = $user['id'];
+        $_SESSION['usr_name'] = $user['username'];
+        header("Location: account.php");
     } else {
-        $errormsg = "Incorrect Email or Password!!!";
+        $errormsg = "Invalid username or password. Please try again.";
     }
+
 }
 ?>
 
@@ -31,6 +38,7 @@ if (isset($_POST['login'])) {
     <title>PHP Login Script</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../stylesheet/login.css" />
 </head>
 
 <body>
@@ -49,7 +57,7 @@ if (isset($_POST['login'])) {
                     <a href="events.html" class="nav-link">Events</a>
                 </li>
                 <li class="nav-item">
-                    <a href="account.html" class="nav-link">Account</a>
+                    <a href="php/account.php" class="nav-link">Account</a>
                 </li>
                 <li class="nav-item">
                     <a href="contact.html" class="nav-link">Contact</a>
