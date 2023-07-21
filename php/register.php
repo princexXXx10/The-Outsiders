@@ -81,21 +81,31 @@ if (isset($_POST['signup'])) {
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="logo">The Outsider</div>
-            <div class="hamburger">
-                <div class="line"></div>
-                <div class="line"></div> 
-                <div class="line"></div>
-            </div>
-            <ul class="nav-links">
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../about.html">About</a></li>
-                <li><a href="../events.html">Events</a></li>
-                <li><a href="account.php">Account</a></li>
-                <li><a href="../contact.html">Contact</a></li>
+    <header class="header">
+        <nav class="navbar">
+            <a href="../index.html" class="nav-logo">The Outsider</a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../events.html" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="account.php" class="nav-link">Account</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../contact.html" class="nav-link">Contact</a>
+                </li>
             </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </nav>
     </header>
 

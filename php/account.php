@@ -47,19 +47,26 @@ include_once 'dbconnect.php';
       <div class="container">
         <div class="collapse navbar-collapse" id="navbar1">
           <ul class="nav navbar-nav navbar-right">
-            <?php if (isset($_SESSION['usr_id'])) {?>
+            <?php if (isset($_SESSION['usr_id'])) { ?>
               <li>
                 <p class="navbar-text">
-                  Signed in as <?php echo $_SESSION['usr_name']; ?>
-                    <div class="profile">
-                      <img src="../Assets/account.jpg" alt="Profile Picture" />
-                    </div>
+                  Signed in as
+                  <?php echo $_SESSION['usr_name']; ?>
+                <div class="profile">
+                  <img src="../Assets/account.jpg" alt="Profile Picture" />
+                </div>
                 </p>
               </li>
-              <li><a href="logout.php">Log Out</a></li>
+              <button class="btn">
+                <li><a href="logout.php">Log Out</a></li>
+              </button>
             <?php } else { ?>
-              <li><a href="login.php">Login</a></li>
-              <li><a href="register.php">Sign Up</a></li>
+              <button class="btn">
+                <li><a href="login.php">Login</a></li>
+              </button>
+              <button class="btn">
+                <li><a href="register.php">Sign Up</a></li>
+              </button>
             <?php } ?>
           </ul>
         </div>
@@ -91,7 +98,7 @@ include_once 'dbconnect.php';
               <p>Date: March 1, 2024</p>
               <p>Location: Mountain Peak</p>
               <p>Price: $100</p>
-              <button class="btn">Enroll</button>
+              <button class="btn">Enrolled</button>
             </div>
             <div class="event-card">
               <img src="../Assets/eventFour.jpg" alt="Event 4" />
@@ -99,14 +106,13 @@ include_once 'dbconnect.php';
               <p>Date: March 1, 2024</p>
               <p>Location: Beachside</p>
               <p>Price: $100</p>
-              <button class="btn">Enroll</button>
+              <button class="btn">Enrolled</button>
             </div>
           </div>
         </div>
         <button class="btn">
-          <a href="events.html">More Events</a>
+          <a href="../events.html">More Events</a>
         </button>
-        <button class="btn">Logout</button>
       </div>
     </section>
   </main>
